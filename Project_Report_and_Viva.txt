@@ -1,0 +1,93 @@
+AI INTERNSHIP PROJECT REPORT
+============================
+
+PROJECT 1: LANGUAGE TRANSLATION TOOL
+
+1. Aim
+To create a browser-based application that accepts text, lets a user choose source and target languages, and displays a translated result.
+
+2. Technologies
+HTML for structure, CSS for styling, JavaScript for user interaction and HTTP requests, and the MyMemory translation web service for translation. Browser Speech Synthesis is used for the optional speak feature.
+
+3. Main features
+- Source and target language selectors.
+- Text input and character count.
+- Translation result panel.
+- Copy result and text-to-speech controls.
+- Swap languages and clear input controls.
+- Error message if the service or network is unavailable.
+
+4. Working
+The user enters text and selects two languages. JavaScript sends a request to the translation service with the text and language pair. The service returns a response containing translated text, which is shown on the page. Network and service errors are handled with a message.
+
+5. Limitations
+An internet connection is required. The public service may impose limits, and translations should be checked for accuracy. The demo limits submitted text length.
+
+PROJECT 2: FAQ CHATBOT
+
+1. Aim
+To develop a simple chatbot that answers common questions using a prepared FAQ knowledge base and text-similarity matching.
+
+2. Technologies
+HTML, CSS, and JavaScript. The matching logic cleans text, removes common words, tokenizes questions, and compares the words in the user's question with stored FAQ questions and answers.
+
+3. Main features
+- Chat-style interface.
+- Sample FAQs about student services.
+- Suggested questions.
+- Best-match answer selection.
+- Fallback message when no suitable answer is found.
+
+4. Working
+The chatbot stores question-and-answer pairs in a JavaScript array. When a user asks a question, the text is converted to lowercase, punctuation is removed, and common words are filtered. A simple similarity score compares the remaining words against each FAQ. The highest-scoring FAQ answer is displayed if it meets a threshold; otherwise, a fallback answer is shown.
+
+5. Limitations
+The chatbot is a rule/word-similarity demo and does not understand all meanings. It uses a small sample FAQ set, so answers should be customized for the selected topic. It is not a trained neural NLP model.
+
+TESTING CHECKLIST
+- Open both HTML files in a browser.
+- For the translator, translate “Hello, how are you?” from English to Hindi; verify that a result appears when online.
+- Try Copy and Speak controls.
+- For the chatbot, ask “How do I apply for admission?” and “How can I check attendance?”
+- Ask an unrelated question and verify that a fallback message appears.
+
+VIVA QUESTIONS AND SHORT ANSWERS
+
+Q1. What is Artificial Intelligence?
+AI is a field of computing that builds systems able to perform tasks associated with human intelligence, such as language processing or recognizing patterns.
+
+Q2. What is an API?
+An API is an interface that lets one software system request a service or data from another system.
+
+Q3. Which technologies are used in the Translation Tool?
+HTML, CSS, JavaScript, a translation web API, and browser text-to-speech.
+
+Q4. Why does the Translation Tool need internet access?
+It sends text to an online translation service and receives the translated result.
+
+Q5. What is NLP?
+Natural Language Processing is a field of AI concerned with processing and analyzing human language.
+
+Q6. How does the FAQ chatbot select an answer?
+It cleans and tokenizes the user's question, scores overlap with stored FAQ text, and returns the best match if the score is high enough.
+
+Q7. What is tokenization?
+Tokenization means splitting text into smaller units, commonly words or tokens.
+
+Q8. What is text similarity?
+It estimates how alike two pieces of text are based on shared words or other features.
+
+Q9. Is this chatbot a generative AI model?
+No. This demo uses a predefined FAQ knowledge base and simple word similarity; it does not generate new answers with a trained language model.
+
+Q10. What are the limitations?
+The translator depends on an external service and internet access. The chatbot only answers questions covered by its FAQ data and may choose a wrong match.
+
+Q11. What is the future scope?
+Add more languages and robust API handling to the translator. Improve the chatbot with TF-IDF/cosine similarity, a larger verified FAQ dataset, an admin page, analytics, and multilingual support.
+
+Q12. How can these projects be improved?
+Add input validation, more tests, accessibility features, stronger similarity methods, a backend, and deployment on a hosting service.
+
+SUBMISSION NOTE
+Use this report as a starting point. Add your own screenshots, institution-specific details, actual test results, and changes. Do not claim testing, model training, or API configuration that you have not performed. Confirm your internship provider's requirements before submitting.

@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>AskMate — FAQ Chatbot</title>
+<style>
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:linear-gradient(135deg,#eff6ff,#f5f3ff);font-family:Arial,sans-serif;display:grid;place-items:center;padding:18px;color:#18213b}
+.app{width:min(760px,100%);height:min(850px,94vh);min-height:600px;background:#fff;border-radius:24px;overflow:hidden;box-shadow:0 18px 55px #27345b20;display:flex;flex-direction:column}
+header{background:#5145cd;color:white;padding:22px 24px;display:flex;gap:14px;align-items:center}header .icon{font-size:34px}h1{font-size:24px;margin:0 0 5px}header p{margin:0;color:#e4e3ff;font-size:13px}
+#chat{flex:1;overflow:auto;padding:20px;display:flex;flex-direction:column;gap:14px;background:#fafbff}
+.msg{max-width:85%;padding:13px 15px;border-radius:16px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}.bot{align-self:flex-start;background:#fff;border:1px solid #e3e6f2;border-bottom-left-radius:4px}.user{align-self:flex-end;background:#5145cd;color:#fff;border-bottom-right-radius:4px}
+.suggestions{padding:0 18px 12px;display:flex;gap:8px;flex-wrap:wrap;background:#fafbff}.suggestions button{border:1px solid #dedcfb;background:#f2f0ff;color:#5145cd;padding:8px 10px;border-radius:18px;cursor:pointer;font-size:12px}
+form{display:flex;gap:10px;padding:16px;border-top:1px solid #edf0f6}input{flex:1;min-width:0;border:1px solid #dce1ee;border-radius:13px;padding:13px;font-size:15px}form button{border:0;background:#5145cd;color:white;border-radius:13px;padding:0 20px;font-weight:bold;cursor:pointer}
+footer{text-align:center;font-size:11px;color:#8a92a7;padding:0 12px 12px}
+@media(max-width:500px){.app{height:94vh;min-height:520px}header{padding:17px}.msg{max-width:93%}form{padding:12px}form button{padding:0 14px}}
+</style></head><body><main class="app">
+<header><div class="icon">🤖</div><div><h1>AskMate FAQ Chatbot</h1><p>Ask questions about college and student services</p></div></header>
+<div id="chat" aria-live="polite"><div class="msg bot">Hi! 👋 I'm AskMate. Ask me about admissions, fees, courses, library hours, attendance, exams, or contact details.</div></div>
+<div class="suggestions"><button>How do I apply?</button><button>What are the library hours?</button><button>How can I check attendance?</button><button>When are exams?</button></div>
+<form id="form"><input id="question" autocomplete="off" placeholder="Type your question…" aria-label="Your question"><button type="submit">Send ➤</button></form>
+<footer>Demo FAQ bot using text cleaning and TF-IDF-like word similarity. Answers come from its sample FAQ knowledge base.</footer>
+</main><script>
+const faqs=[
+{q:"How do I apply for admission?",a:"You can apply through the college's official admission portal. Check the eligibility criteria, complete the application form, upload the required documents, and follow the published admission schedule."},
+{q:"What documents are required for admission?",a:"Commonly required documents include previous examination marksheets, school/college leaving certificate if applicable, identity proof, a passport-size photograph, and any category certificate if applicable. Confirm the exact list with your institution."},
+{q:"How can I pay my fees?",a:"Please check the official student portal or accounts office for the accepted payment methods, due date, and fee receipt. Never share your banking PIN or OTP with anyone."},
+{q:"What courses are available?",a:"Course offerings vary by institution. Check the official college prospectus or website for current undergraduate and postgraduate courses, eligibility, and syllabus."},
+{q:"What are the library hours?",a:"Library hours depend on the institution and may change during holidays or examinations. Please check the library notice board or ask the librarian for today's timings."},
+{q:"How can I check my attendance?",a:"Log in to your student portal if your institution provides one, then open the attendance section. If your attendance looks incorrect, contact the subject teacher or department office."},
+{q:"When are the exams?",a:"Exam dates are announced in the official academic calendar or examination notice. Check the college website or exam cell announcements for the latest timetable."},
+{q:"How do I get my hall ticket?",a:"Hall ticket procedures vary by college. Check the student portal and examination notices, and contact the exam cell if it is missing or your details are incorrect."},
+{q:"How can I contact the college?",a:"Use the phone number, email address, or contact form published on your college's official website. For urgent academic questions, contact your department office."},
+{q:"How do I reset my password?",a:"Use the 'Forgot Password' option on the official portal and follow the verification steps. If it doesn't work, contact the portal administrator. Do not share your password or OTP."},
+{q:"What is the attendance requirement?",a:"Attendance rules differ by institution and course. Refer to your college's current rules or ask your department; don't rely on a general percentage from an unofficial source."},
+{q:"Can I borrow books from the library?",a:"Most academic libraries allow registered students to borrow eligible books using their student ID. Loan limits, renewal rules, and due dates are set by the library."},
+{q:"How do I submit an assignment?",a:"Follow your teacher's instructions. If an online learning portal is used, open the relevant course, select the assignment, upload your file, and confirm that the submission status is successful."},
+{q:"What is the timetable?",a:"Your class timetable is usually shared by the department or available on the student portal. Check the latest notice for room changes or revised timings."}
+];
+function tokens(s){return (s.toLowerCase().replace(/[^a-z0-9\s]/g," ").split(/\s+/).filter(w=>w.length>1&&!["the","is","are","how","do","i","can","my","what","for","a","to","of","and","in","on","me","please","you","your"].includes(w)))}
+function similarity(a,b){const A=tokens(a),B=tokens(b);if(!A.length||!B.length)return 0;const setA=new Set(A),setB=new Set(B);let overlap=0;setA.forEach(w=>{if(setB.has(w))overlap++});const dice=2*overlap/(setA.size+setB.size);const phrase=(a.toLowerCase().includes(b.toLowerCase())||b.toLowerCase().includes(a.toLowerCase()))?.25:0;return dice+phrase}
+const chat=document.getElementById("chat");
+function add(text,who){const el=document.createElement("div");el.className="msg "+who;el.textContent=text;chat.appendChild(el);chat.scrollTop=chat.scrollHeight}
+function answer(q){const ranked=faqs.map(f=>({f,score:Math.max(similarity(q,f.q),similarity(q,f.a)*.65)})).sort((a,b)=>b.score-a.score);if(ranked[0].score<.12)return "Sorry, I couldn't find a reliable answer in my FAQ list. Try asking about admissions, fees, courses, library hours, attendance, exams, assignments, passwords, or contact details.";return ranked[0].f.a}
+document.getElementById("form").addEventListener("submit",e=>{e.preventDefault();const input=document.getElementById("question"),q=input.value.trim();if(!q)return;add(q,"user");input.value="";setTimeout(()=>add(answer(q),"bot"),180)});
+document.querySelectorAll(".suggestions button").forEach(b=>b.addEventListener("click",()=>{document.getElementById("question").value=b.textContent;document.getElementById("form").requestSubmit()}));
+</script></body></html>
